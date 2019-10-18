@@ -36,6 +36,7 @@ then
 	echo "Build Success!"
 	echo -e ${SUCCESS_BODY} ${build_url} | mail -s "${SUBJECT} - Success!" ${TO_ADDRESS}
 	echo "success mail sent"
+    echo $TEST_VARIABLE
 else
 	echo "Build Failed!"
 	echo -e ${FAILURE_BODY} ${build_url} | mail -s "${SUBJECT} - Failed!" ${TO_ADDRESS}
