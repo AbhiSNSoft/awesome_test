@@ -121,12 +121,10 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     defaultConfig {
         applicationId "com.awesomeproject"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -180,6 +178,19 @@ android {
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
 
+        }
+    }
+    flavorDimensions "default"
+    productFlavors {
+        flavor2 {
+            applicationId 'com.awesomeproject'
+            signingConfig signingConfigs.config_release
+            dimension "default"
+        }
+        flavor1 {
+            applicationId 'com.awesomeproject'
+            signingConfig signingConfigs.config_release
+            dimension "default"
         }
     }
 }
