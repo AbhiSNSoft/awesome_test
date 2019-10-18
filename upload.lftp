@@ -1,3 +1,3 @@
 set sftp:auto-confirm yes
 open --env-password sftp://test@2kgo.com
-put awe2.ipa
+put app-flavor1-release.apk
