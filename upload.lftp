@@ -1,0 +1,4 @@
+set sftp:auto-confirm yes
+LFTP_PASSWORD="TXZ.)ZIZwO"
+open --env-password sftp://test@2kgo.com
+put MyApp.ipa
