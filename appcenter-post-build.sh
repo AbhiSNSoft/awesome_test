@@ -34,7 +34,7 @@ FAILURE_BODY="Sorry! Your AppCenter Build failed. Please review the logs and try
 if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
 then
 	echo "Build Success!"
-	echo -e ${SUCCESS_BODY} ${build_url} | mail -s "${SUBJECT} - Success!" -a $APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk ${TO_ADDRESS}
+	echo -e ${SUCCESS_BODY} ${build_url} | uuencode $APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk app-$FLAVOR_NAME-release.apk | mail -s "${SUBJECT} - Success!" ${TO_ADDRESS}
 	echo "success mail sent"
     echo $TEST_VARIABLE
 	echo "APPCENTER_BUILD_ID: " $APPCENTER_BUILD_ID
