@@ -68,7 +68,7 @@ SYSTEM_IOS_CODE=1
 
 if [ "$SYSTEM" == "$SYSTEM_ANDROID" ]; then
 curl -X POST \
-  https://mg.snapplog.com/list/upload \
+  https://mgb.snapplog.com/list/upload \
   -H "content-type: multipart/form-data" \
   -F "version=3.0.4" \
   -F "content=$COMMIT_MESSAGE" \
