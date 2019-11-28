@@ -67,15 +67,25 @@ SYSTEM_ANDROID_CODE=0
 SYSTEM_IOS_CODE=1
 
 if [ "$SYSTEM" == "$SYSTEM_ANDROID" ]; then
-curl -X POST \
-  https://mgb.snapplog.com/list/upload \
-  -H "content-type: multipart/form-data" \
-  -F "version=3.0.4" \
-  -F "content=$COMMIT_MESSAGE" \
-  -F "mode=1" \
-  -F "system=$SYSTEM_ANDROID_CODE" \
-  -F "updateMode=0,1" \
-  -F "platformId=$PLATFORM_ID" \
-  -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk" \
-  -F "token=$TOKEN"
+# curl -X POST \
+#   https://mgb.snapplog.com/list/upload \
+#   -H "content-type: multipart/form-data" \
+#   -F "version=3.0.4" \
+#   -F "content=$COMMIT_MESSAGE" \
+#   -F "mode=1" \
+#   -F "system=$SYSTEM_ANDROID_CODE" \
+#   -F "updateMode=0,1" \
+#   -F "platformId=$PLATFORM_ID" \
+#   -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk" \
+#   -F "token=$TOKEN"
+
+  curl -X POST https://mgb.snapplog.com/list/upload \
+  -H 'content-type: multipart/form-data' \
+  -F version=3.0.2 -F 'content=test desc' \
+  -F mode=1 \
+  -F system=0 \
+  -F 'updateMode=0,1' \
+  -F platformId=5da69cb85477a3f6ab3f5c51 \
+  -F apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk \
+  -F token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Im5hbWUiOiJhcHBjZW50ZXIifSwiaWF0IjoxNTc0ODI4NjI5LCJleHAiOjE2MDYzODYyMjl9.W-zPfEUdT2j-YqBE4SO7vnJPFxUQAR9i8YjFufebdwaXzm4siYE-RuV-PsBkqUFQIBvPaLuNa0I-hqHBnpAzJpVKFFCfz1h_-LtDyadbQIemHYS2DCgQ_SDzcrEsYryijBzP3Efg3MWvCooGTMkUoy_60cgaHxMrEZ7s1Gq2lYc
 fi
