@@ -69,13 +69,13 @@ SYSTEM_IOS_CODE=1
 if [ "$SYSTEM" == "$SYSTEM_ANDROID" ]; then
 curl -X POST \
   https://mg.snapplog.com/list/upload \
-  -H "content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" \
-  -F version=3.0.2 \
+  -H "content-type: multipart/form-data" \
+  -F "version=3.0.4" \
   -F "content=$COMMIT_MESSAGE" \
-  -F mode=1 \
-  -F system=$SYSTEM_ANDROID_CODE \
+  -F "mode=1" \
+  -F "system=$SYSTEM_ANDROID_CODE" \
   -F "updateMode=0,1" \
   -F "platformId=$PLATFORM_ID" \
   -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk" \
-  -F token=$TOKEN
+  -F "token=$TOKEN"
 fi
