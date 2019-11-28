@@ -58,15 +58,24 @@ COMMIT_MESSAGE=$(git log -1 HEAD --pretty=format:%s)
 #     -H "X-HockeyAppToken: $HOCKEY_TOKEN" \
 #     https://rink.hockeyapp.net/api/2/apps/$HOCKEY_APP_ID/app_versions/upload
 
+# $SYSTEM 
+#0=android
+#1=ios
+SYSTEM_ANDROID=android
+SYSTEM_IOS=ios
+SYSTEM_ANDROID_CODE=0
+SYSTEM_IOS_CODE=1
+
+if [ "$SYSTEM" == "$SYSTEM_ANDROID" ]; then
 curl -X POST \
   https://mg.snapplog.com/list/upload \
   -H "content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" \
   -F version=3.0.2 \
   -F "content=$COMMIT_MESSAGE" \
   -F mode=1 \
-  -F system=0 \
+  -F system=$SYSTEM_ANDROID_CODE \
   -F "updateMode=0,1" \
   -F "platformId=$PLATFORM_ID" \
   -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$-release.apk" \
-  app-jbl-release (1).apk
   -F token=$TOKEN
+fi
