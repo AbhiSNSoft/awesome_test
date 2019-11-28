@@ -80,7 +80,8 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; then
     curl \
     -X POST https://mgb.snapplog.com/list/upload \
     -H "content-type: multipart/form-data" \
-    -F "version=3.0.2 -F 'content=test desc" \
+    -F "version=3.0.2" \
+    -F "content=test desc" \
     -F "mode=1" \
     -F "system=0" \
     -F "updateMode=0,1" \
@@ -94,7 +95,8 @@ fi
 # if [ "$SYSTEM" == "$SYSTEM_ANDROID" ]; then
 #   curl -X POST https://mgb.snapplog.com/list/upload \
 #   -H 'content-type: multipart/form-data' \
-#   -F version=3.0.2 -F 'content=test desc' \
+#   -F version=3.0.2 \
+#    -F 'content=test desc' \
 #   -F mode=1 \
 #   -F system=0 \
 #   -F 'updateMode=0,1' \
