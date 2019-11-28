@@ -76,6 +76,6 @@ curl -X POST \
   -F system=$SYSTEM_ANDROID_CODE \
   -F "updateMode=0,1" \
   -F "platformId=$PLATFORM_ID" \
-  -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$-release.apk" \
+  -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk" \
   -F token=$TOKEN
 fi
