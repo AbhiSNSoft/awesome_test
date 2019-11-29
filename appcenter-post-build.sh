@@ -7,7 +7,7 @@ COMMIT_MESSAGE=$(git log -1 HEAD --pretty=format:%s)
 
 # Update your ORG name and APP name
 ORG=abhisnsoft
-APP=$APP_NAME
+APP=$MGB_APP_NAME
 
 #
 # Send a build notification over Email on Success/Failure of AppCenter Builds.
@@ -42,69 +42,61 @@ OS_ANDROID=android
 OS_IOS=ios
 
 echo "BUILD_SOURCEVERSION: $BUILD_SOURCEVERSION"
-
+echo "APPCENTER_BUILD_ID: " $APPCENTER_BUILD_ID
+echo "APPCENTER_BRANCH: " $APPCENTER_BRANCH
 echo "APPCENTER_SOURCE_DIRECTORY: " $APPCENTER_SOURCE_DIRECTORY
 echo "APPCENTER_OUTPUT_DIRECTORY: " $APPCENTER_OUTPUT_DIRECTORY
-
-echo "OS_ANDROID: " $OS_ANDROID
-echo "OS_IOS: " $OS_IOS
+echo "APPCENTER_TRIGGER: " $APPCENTER_TRIGGER
+echo "APPCENTER_XCODE_PROJECT: " $APPCENTER_XCODE_PROJECT
+echo "APPCENTER_XCODE_SCHEME: " $APPCENTER_XCODE_SCHEME
+echo "APPCENTER_ANDROID_VARIANT: " $APPCENTER_ANDROID_VARIANT
+echo "APPCENTER_ANDROID_MODULE: " $APPCENTER_ANDROID_MODULE
+echo "APPCENTER_REACTNATIVE_PACKAGE: " $APPCENTER_REACTNATIVE_PACKAGE
 
 if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; 
     then
-        echo "OS detected: " $SYSTEM_OS
-        # ANDROID - upload .apk file to Manager
-        if [ "$SYSTEM_OS" == "$OS_ANDROID" ]; 
-            then
-            echo "$SYSTEM_OS uploading stated"
-            curl \
-            -X POST https://mgb.snapplog.com/list/upload \
-            -H "content-type: multipart/form-data" \
-            -F "version=$APP_VERSION" \
-            -F "content=$COMMIT_MESSAGE -- uploaded from App Center($PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
-            -F "mode=1" \
-            -F "system=0" \
-            -F "updateMode=0,1" \
-            -F "platformId=$PLATFORM_ID" \
-            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$PLATFORM_NAME-release.apk" \
-            -F "token=$MGB_TOKEN"
-            echo "$SYSTEM_OS uploading finished"
-        fi
-        
-        # IOS - upload .ipa file to Manager
-        if [ "$SYSTEM_OS" == "$OS_IOS" ]; 
-            then
-            echo "$SYSTEM_OS uploading stated"
-            curl \
-            -X POST https://mgb.snapplog.com/list/upload \
-            -H "content-type: multipart/form-data" \
-            -F "version=$APP_VERSION" \
-            -F "content=$COMMIT_MESSAGE -- uploaded from App Center($PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
-            -F "mode=1" \
-            -F "system=1" \
-            -F "updateMode=0,1" \
-            -F "platformId=$PLATFORM_ID" \
-            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/$PLATFORM_NAME.ipa" \
-            -F "token=$MGB_TOKEN"
-            echo "$SYSTEM_OS uploading finished"
-        fi
+    echo "OS detected: " $MGB_SYSTEM_OS
+    # ANDROID - upload .apk file to Manager
+    if [ "$MGB_SYSTEM_OS" == "$OS_ANDROID" ]; 
+        then
+        echo "$MGB_SYSTEM_OS uploading started"
+        curl \
+        -X POST https://mgb.snapplog.com/list/upload \
+        -H "content-type: multipart/form-data" \
+        -F "version=$MGB_APP_VERSION" \
+        -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
+        -F "mode=1" \
+        -F "system=0" \
+        -F "updateMode=0,1" \
+        -F "platformId=$MGB_PLATFORM_ID" \
+        -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$MGB_PLATFORM_NAME-release.apk" \
+        -F "token=$MGB_TOKEN"
+        echo "$MGB_SYSTEM_OS uploading finished"
+    fi
+    
+    # IOS - upload .ipa file to Manager
+    if [ "$MGB_SYSTEM_OS" == "$OS_IOS" ]; 
+        then
+        echo "$MGB_SYSTEM_OS uploading started"
+        curl \
+        -X POST https://mgb.snapplog.com/list/upload \
+        -H "content-type: multipart/form-data" \
+        -F "version=$MGB_APP_VERSION" \
+        -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
+        -F "mode=1" \
+        -F "system=1" \
+        -F "updateMode=0,1" \
+        -F "platformId=$MGB_PLATFORM_ID" \
+        -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/$MGB_PLATFORM_NAME.ipa" \
+        -F "token=$MGB_TOKEN"
+        echo "$MGB_SYSTEM_OS uploading finished"
+    fi
 
-        echo "Build Success!"
-        echo -e ${SUCCESS_BODY} ${build_url} | mail -s "$PLATFORM_NAME ${SUBJECT} - Success!" ${TO_ADDRESS}
-        echo "success mail sent"
-
-        echo "APPCENTER_BUILD_ID: " $APPCENTER_BUILD_ID
-        echo "APPCENTER_BRANCH: " $APPCENTER_BRANCH
-        echo "APPCENTER_SOURCE_DIRECTORY: " $APPCENTER_SOURCE_DIRECTORY
-        echo "APPCENTER_OUTPUT_DIRECTORY: " $APPCENTER_OUTPUT_DIRECTORY
-        echo "APPCENTER_TRIGGER: " $APPCENTER_TRIGGER
-    	echo "APPCENTER_XCODE_PROJECT: " $APPCENTER_XCODE_PROJECT
-    	echo "APPCENTER_XCODE_SCHEME: " $APPCENTER_XCODE_SCHEME
-        echo "APPCENTER_ANDROID_VARIANT: " $APPCENTER_ANDROID_VARIANT
-        echo "APPCENTER_ANDROID_MODULE: " $APPCENTER_ANDROID_MODULE
-        echo "APPCENTER_REACTNATIVE_PACKAGE: " $APPCENTER_REACTNATIVE_PACKAGE
-    	
-    else
-        echo "Build Failed!"
-        echo -e ${FAILURE_BODY} ${build_url} | mail -s "$PLATFORM_NAME ${SUBJECT} - Failed!" ${TO_ADDRESS}
-        echo "failure mail sent"
+    echo "Build Success!"
+    echo -e ${SUCCESS_BODY} ${build_url} | mail -s "$MGB_PLATFORM_NAME ${SUBJECT} - Success!" ${TO_ADDRESS}
+    echo "success mail sent"
+else
+    echo "Build Failed!"
+    echo -e ${FAILURE_BODY} ${build_url} | mail -s "$MGB_PLATFORM_NAME ${SUBJECT} - Failed!" ${TO_ADDRESS}
+    echo "failure mail sent"
 fi
