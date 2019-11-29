@@ -3,7 +3,7 @@
 # Deploy to mg.snapplog.com
 
 # Get the message of the last commit using Git
-COMMIT_MESSAGE=$(git log -1 HEAD --pretty=format:%s)
+COMMIT_MESSAGE=$(git log -1 HEAD --pretty=format:%s) -- uploaded from App Center($PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)
 
 # Update your ORG name and APP name
 ORG=abhisnsoft
@@ -59,13 +59,13 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             curl \
             -X POST https://mgb.snapplog.com/list/upload \
             -H "content-type: multipart/form-data" \
-            -F "version=3.0.2" \
+            -F "version=$APP_VERSION" \
             -F "content=$COMMIT_MESSAGE" \
             -F "mode=1" \
             -F "system=0" \
             -F "updateMode=0,1" \
             -F "platformId=$PLATFORM_ID" \
-            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$FLAVOR_NAME-release.apk" \
+            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$PLATFORM_NAME-release.apk" \
             -F "token=$MGB_TOKEN"
             echo "$SYSTEM_OS uploading finished"
         fi
@@ -77,19 +77,19 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             curl \
             -X POST https://mgb.snapplog.com/list/upload \
             -H "content-type: multipart/form-data" \
-            -F "version=3.0.2" \
+            -F "version=$APP_VERSION" \
             -F "content=$COMMIT_MESSAGE" \
             -F "mode=1" \
             -F "system=1" \
             -F "updateMode=0,1" \
             -F "platformId=$PLATFORM_ID" \
-            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/$PLATFORM.ipa" \
+            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/$PLATFORM_NAME.ipa" \
             -F "token=$MGB_TOKEN"
             echo "$SYSTEM_OS uploading finished"
         fi
 
         echo "Build Success!"
-        echo -e ${SUCCESS_BODY} ${build_url} | mail -s "$PLATFORM ${SUBJECT} - Success!" ${TO_ADDRESS}
+        echo -e ${SUCCESS_BODY} ${build_url} | mail -s "$PLATFORM_NAME ${SUBJECT} - Success!" ${TO_ADDRESS}
         echo "success mail sent"
 
         echo "APPCENTER_BUILD_ID: " $APPCENTER_BUILD_ID
@@ -97,14 +97,14 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         echo "APPCENTER_SOURCE_DIRECTORY: " $APPCENTER_SOURCE_DIRECTORY
         echo "APPCENTER_OUTPUT_DIRECTORY: " $APPCENTER_OUTPUT_DIRECTORY
         echo "APPCENTER_TRIGGER: " $APPCENTER_TRIGGER
-    #	echo "APPCENTER_XCODE_PROJECT: " $APPCENTER_XCODE_PROJECT
-    #	echo "APPCENTER_XCODE_SCHEME: " $APPCENTER_XCODE_SCHEME
+    	echo "APPCENTER_XCODE_PROJECT: " $APPCENTER_XCODE_PROJECT
+    	echo "APPCENTER_XCODE_SCHEME: " $APPCENTER_XCODE_SCHEME
         echo "APPCENTER_ANDROID_VARIANT: " $APPCENTER_ANDROID_VARIANT
         echo "APPCENTER_ANDROID_MODULE: " $APPCENTER_ANDROID_MODULE
         echo "APPCENTER_REACTNATIVE_PACKAGE: " $APPCENTER_REACTNATIVE_PACKAGE
     	
     else
         echo "Build Failed!"
-        echo -e ${FAILURE_BODY} ${build_url} | mail -s "$PLATFORM ${SUBJECT} - Failed!" ${TO_ADDRESS}
+        echo -e ${FAILURE_BODY} ${build_url} | mail -s "$PLATFORM_NAME ${SUBJECT} - Failed!" ${TO_ADDRESS}
         echo "failure mail sent"
 fi
