@@ -3,7 +3,7 @@
 # Deploy to mg.snapplog.com
 
 # Get the message of the last commit using Git
-COMMIT_MESSAGE=$(git log -1 HEAD --pretty=format:%s) -- uploaded from App Center($PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)
+COMMIT_MESSAGE=$(git log -1 HEAD --pretty=format:%s)
 
 # Update your ORG name and APP name
 ORG=abhisnsoft
@@ -60,7 +60,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             -X POST https://mgb.snapplog.com/list/upload \
             -H "content-type: multipart/form-data" \
             -F "version=$APP_VERSION" \
-            -F "content=$COMMIT_MESSAGE" \
+            -F "content=$COMMIT_MESSAGE -- uploaded from App Center($PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
             -F "mode=1" \
             -F "system=0" \
             -F "updateMode=0,1" \
@@ -78,7 +78,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             -X POST https://mgb.snapplog.com/list/upload \
             -H "content-type: multipart/form-data" \
             -F "version=$APP_VERSION" \
-            -F "content=$COMMIT_MESSAGE" \
+            -F "content=$COMMIT_MESSAGE -- uploaded from App Center($PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
             -F "mode=1" \
             -F "system=1" \
             -F "updateMode=0,1" \
