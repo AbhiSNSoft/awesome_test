@@ -40,8 +40,8 @@ MGB_BUILD_MODE=1
 # false => Don't upload build (Default)
 MGB_BUILD_UPLOAD=false
 
-MGB_BUILD_MODE_STAGING      = "\[build-d]"
-MGB_BUILD_MODE_PRERELEASE   = "\[build-p]"
+MGB_BUILD_MODE_STAGING      = "build-d"
+MGB_BUILD_MODE_PRERELEASE   = "build-p"
 
 
 echo "BUILD_SOURCEVERSION: $BUILD_SOURCEVERSION"
