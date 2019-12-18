@@ -40,6 +40,9 @@ MGB_BUILD_MODE=1
 # false => Don't upload build (Default)
 MGB_BUILD_UPLOAD=false
 
+MGB_BUILD_MODE_STAGING="[build-d]"
+MGB_BUILD_MODE_PRERELEASE="[build-p]"
+
 
 echo "BUILD_SOURCEVERSION: $BUILD_SOURCEVERSION"
 echo "APPCENTER_BUILD_ID: " $APPCENTER_BUILD_ID
@@ -74,13 +77,13 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         MGB_BUILD_UPLOAD=true
         MGB_BUILD_MODE=1
     # Upload build to Manager if commit message contains [build-d]
-    elif [ "$COMMIT_MESSAGE" == *_[build-d]_* ]; 
+    elif [ "$COMMIT_MESSAGE" =~ $MGB_BUILD_MODE_STAGING ]; 
         then
         echo "build-d staging"
         MGB_BUILD_UPLOAD=true
         MGB_BUILD_MODE=0
     # Upload build to Manager if commit message contains [build-p]
-    elif [ "$COMMIT_MESSAGE" == *_[build-p]_* ];
+    elif [ "$COMMIT_MESSAGE" =~ $MGB_BUILD_MODE_PRERELEASE ];
         then
         echo "build-d pre-release"
         MGB_BUILD_UPLOAD=true
