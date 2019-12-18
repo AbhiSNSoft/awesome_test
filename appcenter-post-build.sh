@@ -71,20 +71,20 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
 	if [ "$APPCENTER_BRANCH" == "rn0.6_prod" ];
         then
         echo "production branch $APPCENTER_BRANCH"
-        $MGB_BUILD_UPLOAD=true
-        $MGB_BUILD_MODE=1
+        MGB_BUILD_UPLOAD=true
+        MGB_BUILD_MODE=1
     # Upload build to Manager if commit message contains [build-d]
-    elif [ "$COMMIT_MESSAGE" == *"[build-d]"* ]; 
+    elif [ "$COMMIT_MESSAGE" == *[build-d]* ]; 
         then
         echo "build-d staging"
-        $MGB_BUILD_UPLOAD=true
-        $MGB_BUILD_MODE=0
+        MGB_BUILD_UPLOAD=true
+        MGB_BUILD_MODE=0
         # Upload build to Manager if commit message contains [build-p]
-    elif [ "$COMMIT_MESSAGE" == *"[build-p]"* ];
+    elif [ "$COMMIT_MESSAGE" == *[build-p]* ];
         then
         echo "build-d pre-release"
-        $MGB_BUILD_UPLOAD=true
-        $MGB_BUILD_MODE=1
+        MGB_BUILD_UPLOAD=true
+        MGB_BUILD_MODE=1
     else
         echo "Skip upload"
         MGB_BUILD_UPLOAD=false
