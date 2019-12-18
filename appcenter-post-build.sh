@@ -77,13 +77,13 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         MGB_BUILD_UPLOAD=true
         MGB_BUILD_MODE=1
     # Upload build to Manager if commit message contains [build-d]
-    elif [ "$COMMIT_MESSAGE" == *_${MGB_BUILD_MODE_STAGING}_* ]; 
+    elif [[ "$COMMIT_MESSAGE" =~ $MGB_BUILD_MODE_STAGING ]]; 
         then
         echo "build-d staging"
         MGB_BUILD_UPLOAD=true
         MGB_BUILD_MODE=0
     # Upload build to Manager if commit message contains [build-p]
-    elif [ "$COMMIT_MESSAGE" == *_${MGB_BUILD_MODE_PRERELEASE}_* ]; 
+    elif [[ "$COMMIT_MESSAGE" =~ $MGB_BUILD_MODE_PRERELEASE ]]; 
         then
         echo "build-d pre-release"
         MGB_BUILD_UPLOAD=true
