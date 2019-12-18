@@ -85,6 +85,10 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         echo "build-d pre-release"
         $MGB_BUILD_UPLOAD=true
         $MGB_BUILD_MODE=1
+    else
+        echo "Skip upload"
+        $MGB_BUILD_UPLOAD=false
+        $MGB_BUILD_MODE=0
     fi
 
     echo "MGB_BUILD_UPLOAD: $MGB_BUILD_UPLOAD"
