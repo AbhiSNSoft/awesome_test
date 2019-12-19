@@ -118,6 +118,12 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             -F "token=$MGB_TOKEN" | jq --raw-output '.status' )
 
             echo "STATUS_CODE=$STATUS_CODE"
+            if [ "$STATUS_CODE" == 200];
+            then
+                echo "Upload sucessful"
+            else
+                echo "Upload failed"
+            fi
 
             echo "$MGB_SYSTEM_OS uploading finished"
         fi
