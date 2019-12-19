@@ -62,7 +62,7 @@ build_url=https://appcenter.ms/users/$ORG/apps/$APP/build/branches/$APPCENTER_BR
 # Address to send email
 TO_ADDRESS="abhinay@snsoft.my"
 # A sample Subject Title 
-SUBJECT="AppCenter Build $AGENT_JOBSTATUS"
+SUBJECT="AppCenter Build $AGENT_JOBSTATUS!"
 # Content of the Email on Build-Success.
 SUCCESS_BODY="Success! Your build($APPCENTER_BUILD_ID) completed successfully!\n\n"
 # Content of the Email on Build-Failure.
@@ -88,6 +88,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         echo "build-p pre-release"
         MGB_BUILD_UPLOAD=true
         MGB_BUILD_MODE=1
+    # Don't upload build to Manager
     else
         echo "Skip upload"
         MGB_BUILD_UPLOAD=false
@@ -103,17 +104,21 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         if [ "$MGB_SYSTEM_OS" == "$OS_ANDROID" ]; 
             then
             echo "$MGB_SYSTEM_OS uploading started"
-            # curl \
-            # -X POST https://mgb.snapplog.com/list/upload \
-            # -H "content-type: multipart/form-data" \
-            # -F "version=$MGB_APP_VERSION" \
-            # -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
-            # -F "mode=$MGB_BUILD_MODE" \
-            # -F "system=0" \
-            # -F "updateMode=0,1" \
-            # -F "platformId=$MGB_PLATFORM_ID" \
-            # -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$MGB_PLATFORM_NAME-release.apk" \
-            # -F "token=$MGB_TOKEN"
+
+            STATUS_CODE=$(curl \
+            -X POST https://mgb.snapplog.com/list/upload \
+            -H "content-type: multipart/form-data" \
+            -F "version=$MGB_APP_VERSION" \
+            -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
+            -F "mode=$MGB_BUILD_MODE" \
+            -F "system=0" \
+            -F "updateMode=0,1" \
+            -F "platformId=$MGB_PLATFORM_ID" \
+            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/app-$MGB_PLATFORM_NAME-release.apk" \
+            -F "token=$MGB_TOKEN" | jq --raw-output '.status' )
+
+            echo "STATUS_CODE=$STATUS_CODE"
+
             echo "$MGB_SYSTEM_OS uploading finished"
         fi
         
@@ -121,17 +126,17 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         if [ "$MGB_SYSTEM_OS" == "$OS_IOS" ]; 
             then
             echo "$MGB_SYSTEM_OS uploading started"
-            # curl \
-            # -X POST https://mgb.snapplog.com/list/upload \
-            # -H "content-type: multipart/form-data" \
-            # -F "version=$MGB_APP_VERSION" \
-            # -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
-            # -F "mode=$MGB_BUILD_MODE" \
-            # -F "system=1" \
-            # -F "updateMode=0,1" \
-            # -F "platformId=$MGB_PLATFORM_ID" \
-            # -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/$MGB_PLATFORM_NAME.ipa" \
-            # -F "token=$MGB_TOKEN"
+            curl \
+            -X POST https://mgb.snapplog.com/list/upload \
+            -H "content-type: multipart/form-data" \
+            -F "version=$MGB_APP_VERSION" \
+            -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
+            -F "mode=$MGB_BUILD_MODE" \
+            -F "system=1" \
+            -F "updateMode=0,1" \
+            -F "platformId=$MGB_PLATFORM_ID" \
+            -F "apk=@$APPCENTER_OUTPUT_DIRECTORY/$MGB_PLATFORM_NAME.ipa" \
+            -F "token=$MGB_TOKEN"
             echo "$MGB_SYSTEM_OS uploading finished"
         fi
     fi
