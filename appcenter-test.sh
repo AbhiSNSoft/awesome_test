@@ -15,10 +15,6 @@ MGB_UPLOAD_RESPONSE=$(curl \
 -F apk=@/Users/snsoft/Downloads/app-jbl-release.apk | \
 jq --raw-output 'if .status == 200 then {status} else . end' )
 
-
-
-
-
 echo "MGB_UPLOAD_RESPONSE=$MGB_UPLOAD_RESPONSE"
 
 MGB_STATUS_CODE=$(jq '.status' <<< "$MGB_UPLOAD_RESPONSE" )
@@ -50,14 +46,14 @@ https://appcenter.ms/users/
 # Address to send email
 TO_ADDRESS="abhinay@snsoft.my"
 # A sample Subject Title 
-SUBJECT="AppCenter Build ⚠️"
+SUBJECT="⛔️AppCenter Build $AGENT_JOBSTATUS and ⚠️build upload Failed!⚠️"
 # Content of the Email on Build-Success.
 
 # UPLOAD Build-Success.
 SUCCESS_UPLOAD_BODY="Success! Your build completed and build upload Succeeded!\n\n"
 
 # UPLOAD Build-Failure.
-FAIL_UPLOAD_BODY="⚠️Failed⚠️! Your build completed successfully but build upload Failed⚠️\n\n
+FAIL_UPLOAD_BODY="⛔️Failed! build() completed successfully and build upload Failed!\n\n
 UPLOAD_ERROR_NAME=$MGB_ERROR_NAME\n
 UPLOAD_ERROR_MESSAGE=$MGB_ERROR_MESSAGE\n
 UPLOAD_ERROR_STACK=$MGB_ERROR_STACK\n"
@@ -68,7 +64,7 @@ Disclaimer: This mail is auto generated do not reply."
 FAILURE_BODY="Sorry! Your AppCenter Build failed. Please review the logs and try again.\n\n"
 
 
-if ["$MGB_UPLOAD_STATUS" == "Build upload not Requested" ];
+if [ "$MGB_UPLOAD_STATUS" == "Build upload not Requested" ];
 then
     echo -e ${FAIL_UPLOAD_BODY} ${build_url} ${BODY_DISCLAIMER}   | mail -s "$MGB_PLATFORM_NAME $MGB_SYSTEM_OS($APPCENTER_BUILD_ID) ${SUBJECT}" ${TO_ADDRESS}
 else

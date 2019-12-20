@@ -146,8 +146,8 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         if [ "$MGB_STATUS_CODE" == "200" ];
             then
             echo "MGB_UPLOAD_STATUS: Build upload Succeeded"
-            
-            SUBJECT="✅AppCenter Build $AGENT_JOBSTATUS and build upload Succeeded!"
+
+            SUBJECT="✅AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS and build upload Succeeded!"
             SUCCESS_BODY="✅Success! $MGB_PLATFORM_NAME build($APPCENTER_BUILD_ID) completed successfully and build upload Succeeded!\n\n"
         # UPLOAD Build-Failure.
         else
@@ -160,7 +160,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             echo "MGB_ERROR_MESSAGE=$MGB_ERROR_MESSAGE"
             echo "MGB_ERROR_STACK=$MGB_ERROR_STACK"
             
-            SUBJECT="⛔️AppCenter Build $AGENT_JOBSTATUS and ⚠️build upload Failed!⚠️"
+            SUBJECT="⛔️AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS and ⚠️build upload Failed!⚠️"
             SUCCESS_BODY="⛔️Failed! $MGB_PLATFORM_NAME build($APPCENTER_BUILD_ID) completed successfully and build upload Failed!\n\n            
             UPLOAD_ERROR_NAME: $MGB_ERROR_NAME\n
             UPLOAD_ERROR_MESSAGE: $MGB_ERROR_MESSAGE\n
@@ -168,7 +168,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
         fi
     # UPLOAD not requested.
     else
-        SUBJECT="✅AppCenter Build $AGENT_JOBSTATUS and build upload not requested!"
+        SUBJECT="✅AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS and build upload not requested!"
         SUCCESS_BODY="✅Success! $MGB_PLATFORM_NAME build($APPCENTER_BUILD_ID) completed successfully and build upload not requested!\n\n"
     fi
     echo -e ${SUCCESS_BODY} ${build_url} ${BODY_DISCLAIMER} | mail -s "$MGB_PLATFORM_NAME $MGB_SYSTEM_OS($APPCENTER_BUILD_ID) ${SUBJECT}" ${TO_ADDRESS}
@@ -177,9 +177,9 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
 else
     echo "Build Failed!"
     
-    SUBJECT="⛔️AppCenter Build $AGENT_JOBSTATUS!"
+    SUBJECT="⛔️AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS!"
     FAILURE_BODY="⛔️Failed! $MGB_PLATFORM_NAME AppCenter Build($APPCENTER_BUILD_ID) failed. Please review the logs and try again.\n\n"
 
-    echo -e ${FAILURE_BODY} ${build_url} ${BODY_DISCLAIMER} | mail -s "$MGB_PLATFORM_NAME $MGB_SYSTEM_OS($APPCENTER_BUILD_ID) ${SUBJECT}" ${TO_ADDRESS}
+    echo -e ${FAILURE_BODY} ${build_url} ${BODY_DISCLAIMER} | mail -s "$MGB_SYSTEM_OS($APPCENTER_BUILD_ID) ${SUBJECT}" ${TO_ADDRESS}
     echo "failure mail sent"
 fi
