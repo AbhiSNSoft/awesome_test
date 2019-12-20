@@ -50,14 +50,14 @@ https://appcenter.ms/users/
 # Address to send email
 TO_ADDRESS="abhinay@snsoft.my"
 # A sample Subject Title 
-SUBJECT="AppCenter Build !"
+SUBJECT="AppCenter Build ⚠️"
 # Content of the Email on Build-Success.
 
 # UPLOAD Build-Success.
 SUCCESS_UPLOAD_BODY="Success! Your build completed and build upload Succeeded!\n\n"
 
 # UPLOAD Build-Failure.
-FAIL_UPLOAD_BODY="Failed! Your build completed successfully but build upload Failed!\n\n
+FAIL_UPLOAD_BODY="⚠️Failed⚠️! Your build completed successfully but build upload Failed⚠️\n\n
 UPLOAD_ERROR_NAME=$MGB_ERROR_NAME\n
 UPLOAD_ERROR_MESSAGE=$MGB_ERROR_MESSAGE\n
 UPLOAD_ERROR_STACK=$MGB_ERROR_STACK\n"
