@@ -47,6 +47,7 @@ MGB_BUILD_MODE=1
 # true => Upload build
 # false => Don't upload build (Default)
 MGB_BUILD_UPLOAD=false
+MGB_STATUS_CODE="000"
 
 MGB_BUILD_MODE_STAGING="build-d"
 MGB_BUILD_MODE_PRERELEASE="build-p"
@@ -64,6 +65,8 @@ echo "APPCENTER_ANDROID_VARIANT: " $APPCENTER_ANDROID_VARIANT
 echo "APPCENTER_ANDROID_MODULE: " $APPCENTER_ANDROID_MODULE
 echo "APPCENTER_REACTNATIVE_PACKAGE: " $APPCENTER_REACTNATIVE_PACKAGE
 echo "COMMIT_MESSAGE: $COMMIT_MESSAGE"
+echo "MGB_UPLOAD_URL: $MGB_UPLOAD_URL"
+
 
 # If Agent Job Build Status is successful, Send the email, if not send a failure email.
 if [ "$AGENT_JOBSTATUS" == "Succeeded" ]; 
@@ -106,7 +109,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             echo "$MGB_SYSTEM_OS uploading started"
             
             MGB_UPLOAD_RESPONSE=$(curl \
-            -X POST https://mgb.snapplog.com/list/upload \
+            -X POST $MGB_UPLOAD_URL \
             -H "content-type: multipart/form-data" \
             -F "version=$MGB_APP_VERSION" \
             -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
@@ -126,7 +129,7 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             then
             echo "$MGB_SYSTEM_OS uploading started"
             MGB_UPLOAD_RESPONSE=$(curl \
-            -X POST https://mgb.snapplog.com/list/upload \
+            -X POST $MGB_UPLOAD_URL \
             -H "content-type: multipart/form-data" \
             -F "version=$MGB_APP_VERSION" \
             -F "content=$COMMIT_MESSAGE -- uploaded from App Center($MGB_PLATFORM_NAME, Build id:$APPCENTER_BUILD_ID)" \
@@ -140,15 +143,19 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             
             echo "$MGB_SYSTEM_OS uploading finished"
         fi
+        
+        echo "MGB_UPLOAD_RESPONSE=$MGB_UPLOAD_RESPONSE"
 
+        MGB_STATUS_CODE=$(jq '.status' <<< "$MGB_UPLOAD_RESPONSE" )
         echo "MGB_STATUS_CODE=$MGB_STATUS_CODE"
+        
         # UPLOAD Build-Success.
         if [ "$MGB_STATUS_CODE" == "200" ];
             then
             echo "MGB_UPLOAD_STATUS: Build upload Succeeded"
 
-            SUBJECT="AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS and build upload Succeeded!"
-            SUCCESS_BODY="Success! $MGB_PLATFORM_NAME build($APPCENTER_BUILD_ID) completed successfully and build upload Succeeded!\n\n"
+            SUBJECT="AppCenter build $AGENT_JOBSTATUS and build upload Succeeded!"
+            SUCCESS_BODY="SUCCESS! $MGB_PLATFORM_NAME $MGB_SYSTEM_OS build($APPCENTER_BUILD_ID) completed successfully and build upload Succeeded!\n\n"
         # UPLOAD Build-Failure.
         else
             echo "MGB_UPLOAD_STATUS: Build upload Failed"
@@ -160,16 +167,16 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
             echo "MGB_ERROR_MESSAGE=$MGB_ERROR_MESSAGE"
             echo "MGB_ERROR_STACK=$MGB_ERROR_STACK"
             
-            SUBJECT="AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS and build upload Failed!"
-            SUCCESS_BODY="Failed! $MGB_PLATFORM_NAME build($APPCENTER_BUILD_ID) completed successfully and build upload Failed!\n\n            
+            SUBJECT="AppCenter build $AGENT_JOBSTATUS and build upload Failed!"
+            SUCCESS_BODY="FAILED! $MGB_PLATFORM_NAME $MGB_SYSTEM_OS build($APPCENTER_BUILD_ID) completed successfully and build upload Failed!\n\n            
             UPLOAD_ERROR_NAME: $MGB_ERROR_NAME\n
             UPLOAD_ERROR_MESSAGE: $MGB_ERROR_MESSAGE\n
             UPLOAD_ERROR_STACK: \n$MGB_ERROR_STACK\n\n"
         fi
     # UPLOAD not requested.
     else
-        SUBJECT="AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS and build upload not requested!"
-        SUCCESS_BODY="Success! $MGB_PLATFORM_NAME build($APPCENTER_BUILD_ID) completed successfully and build upload not requested!\n\n"
+        SUBJECT="AppCenter build $AGENT_JOBSTATUS and build upload not requested!"
+        SUCCESS_BODY="SUCCESS! $MGB_PLATFORM_NAME $MGB_SYSTEM_OS build($APPCENTER_BUILD_ID) completed successfully and build upload not requested!\n\n"
     fi
     echo -e ${SUCCESS_BODY} ${build_url} ${BODY_DISCLAIMER} | mail -s "$MGB_PLATFORM_NAME $MGB_SYSTEM_OS($APPCENTER_BUILD_ID) ${SUBJECT}" ${TO_ADDRESS}
     echo "success mail sent"
@@ -177,8 +184,8 @@ if [ "$AGENT_JOBSTATUS" == "Succeeded" ];
 else
     echo "Build Failed!"
     
-    SUBJECT="AppCenter $MGB_PLATFORM_NAME Build $AGENT_JOBSTATUS!"
-    FAILURE_BODY="Failed! $MGB_PLATFORM_NAME AppCenter Build($APPCENTER_BUILD_ID) failed. Please review the logs and try again.\n\n"
+    SUBJECT="AppCenter build $AGENT_JOBSTATUS!"
+    FAILURE_BODY="FAILED! $MGB_PLATFORM_NAME $MGB_SYSTEM_OS build($APPCENTER_BUILD_ID) failed. Please review the logs and try again.\n\n"
 
     echo -e ${FAILURE_BODY} ${build_url} ${BODY_DISCLAIMER} | mail -s "$MGB_SYSTEM_OS($APPCENTER_BUILD_ID) ${SUBJECT}" ${TO_ADDRESS}
     echo "failure mail sent"

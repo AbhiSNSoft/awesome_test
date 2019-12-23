@@ -9,12 +9,16 @@ MGB_UPLOAD_RESPONSE=$(curl \
 -X POST https://mgb.snapplog.com/list/upload \
 -H 'content-type: multipart/form-data' \
 -F version=3.0.2 -F 'content=test desc' \
--F mode=1 -F system=0 -F 'updateMode=0,1' \
--F platformId=5da69cb85477a3f6ab3f5c51 \
--F token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ.eyJkYXRhIjp7Im5hbWUiOiJhcHBjZW50ZXIifSwiaWF0IjoxNTc0ODI4NjI5LCJleHAiOjE2MDYzODYyMjl9.W-zPfEUdT2j-YqBE4SO7vnJPFxUQAR9i8YjFufebdwaXzm4siYE-RuV-PsBkqUFQIBvPaLuNa0I-hqHBnpAzJpVKFFCfz1h_-LtDyadbQIemHYS2DCgQ_SDzcrEsYryijBzP3Efg3MWvCooGTMkUoy_60cgaHxMrEZ7s1Gq2lYc \
+-F mode=0 \
+-F system=0 \
+-F 'updateMode=0,1' \
+-F platformId=5e002ac57b254a702be8fc35 \
+-F token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Im5hbWUiOiJhcHBjZW50ZXIifSwiaWF0IjoxNTc0ODI4NjI5LCJleHAiOjE2MDYzODYyMjl9.W-zPfEUdT2j-YqBE4SO7vnJPFxUQAR9i8YjFufebdwaXzm4siYE-RuV-PsBkqUFQIBvPaLuNa0I-hqHBnpAzJpVKFFCfz1h_-LtDyadbQIemHYS2DCgQ_SDzcrEsYryijBzP3Efg3MWvCooGTMkUoy_60cgaHxMrEZ7s1Gq2lYc \
 -F apk=@/Users/snsoft/Downloads/app-jbl-release.apk | \
 jq --raw-output 'if .status == 200 then {status} else . end' )
 
+
+# MGB_UPLOAD_RESPONSE=$("{"status":200,"data":"ww"}" )
 echo "MGB_UPLOAD_RESPONSE=$MGB_UPLOAD_RESPONSE"
 
 MGB_STATUS_CODE=$(jq '.status' <<< "$MGB_UPLOAD_RESPONSE" )
@@ -46,14 +50,14 @@ https://appcenter.ms/users/
 # Address to send email
 TO_ADDRESS="abhinay@snsoft.my"
 # A sample Subject Title 
-SUBJECT="⛔️AppCenter Build $AGENT_JOBSTATUS and ⚠️build upload Failed!⚠️"
+SUBJECT="AppCenter Build $AGENT_JOBSTATUS and build upload Failed!"
 # Content of the Email on Build-Success.
 
 # UPLOAD Build-Success.
 SUCCESS_UPLOAD_BODY="Success! Your build completed and build upload Succeeded!\n\n"
 
 # UPLOAD Build-Failure.
-FAIL_UPLOAD_BODY="⛔️Failed! build() completed successfully and build upload Failed!\n\n
+FAIL_UPLOAD_BODY="Failed! build() completed successfully and build upload Failed!\n\n
 UPLOAD_ERROR_NAME=$MGB_ERROR_NAME\n
 UPLOAD_ERROR_MESSAGE=$MGB_ERROR_MESSAGE\n
 UPLOAD_ERROR_STACK=$MGB_ERROR_STACK\n"
